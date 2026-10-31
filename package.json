@@ -1,2 +1,0 @@
-{"name":"api---ilogia","private":true,"version":"0.1.0","type":"module","engines":{"node":">=20"},
-"scripts":{"start":"node server.mjs","test":"node test.mjs"}}
