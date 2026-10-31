@@ -1,0 +1,13 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>للمطورين — iLogia API</title><meta name="description" content="دليل واجهة iLogia API"><meta name="theme-color" content="#136F58"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="css/style.css"><script>try{var t=localStorage.getItem("ilogia-theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}</script></head><body><div id="top"></div><main class="wrap sec"><h1>دليل الواجهة (API)</h1>
+<p class="muted">العنوان الأساسي: <code id="base"></code> — المصادقة: <code>Authorization: Bearer &lt;token&gt;</code></p>
+<div class="row" style="margin-bottom:20px"><a class="btn" id="fullDocs" target="_blank" rel="noopener">التوثيق التفاعلي الكامل</a></div>
+<div class="card"><h2>المسارات</h2><div id="eps"></div></div>
+<div class="card"><h2>شكل الأخطاء</h2><p class="muted">كل الأخطاء بنفس الشكل، ورمز <code>code</code> ثابت يمكن التعامل معه برمجيًا.</p>
+<pre>{ "error": { "code": "forbidden", "message": "Admin only", "request_id": "…" } }</pre></div>
+<div class="card"><h2>الدخول الموحد لتطبيق جديد</h2>
+<pre>1) أنشئ code_verifier عشوائيًا (43–128 حرفًا) و code_challenge = base64url(SHA-256(verifier))
+2) حوّل المستخدم إلى صفحة الدخول المركزية مع client_id و redirect_uri و code_challenge و state
+3) بعد العودة: تحقق من state ثم
+   POST /sso/token { grant_type:"authorization_code", client_id, code, code_verifier, redirect_uri }
+4) استخدم access_token (صالح ١٥ دقيقة) في Authorization header</pre></div></main>
+<div id="foot"></div><script type="module" src="js/docs.js"></script></body></html>

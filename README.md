@@ -1,18 +1,17 @@
-# api---ilogia
-الباك-إند لـ `api.ilogia-eg.com`. بدون أي اعتماديات (Node 20+).
+# موقع iLogia API (واجهة ثابتة لـ GitHub Pages)
 
-## التشغيل
-1. نفّذ `supabase/schema.sql` في Supabase SQL editor (يضيف unique index يمنع تكرار الإنجاز + RLS قراءة فقط).
-2. `cp .env.example .env` واملأ المفاتيح، ثم `node --env-file=.env server.mjs`.
-3. `node test.mjs` لتشغيل الاختبارات (تستخدم Supabase/Anthropic وهميين).
+ملفات ثابتة بلا Build. الهوية: ألوان وخطوط iLogia الأصلية (أخضر #136F58، عاجي #FBF9F5، ذهبي #D4AF37، Noto Serif + IBM Plex Sans Arabic).
 
-## الـ Endpoints
-- `POST /challenges/:id/complete` + `Authorization: Bearer <access_token>` → يتحقق من المستخدم، يقرأ النقاط من الجدول (لا يثق بالعميل)، ويسجل في الـ ledger. أكواد: 200 / 401 / 404 / 409 (مكرر) / 410 (منتهي) / 429.
-- `POST /ai` `{mode,text}` → `{reply}` عبر Claude. الحد 6000 حرف و10 طلبات/دقيقة لكل IP.
-- `GET /health`
+## الصفحات
+`index.html` الرئيسية + حالة الخدمة الحية · `apps.html` التطبيقات · `account.html` الدخول ولوحة الحساب (إشعارات، نشاط، وإدارة التطبيقات والتكاملات للمدير) · `docs.html` دليل المطور · `404.html`
 
-## الربط
-- Arena: `VITE_API_URL=https://api.ilogia-eg.com`
-- AI: `VITE_AI_ENDPOINT=https://api.ilogia-eg.com/ai`
-- CORS مقصور على `ALLOWED_ORIGINS`.
-- خلف reverse proxy (Caddy/nginx) مع HTTPS؛ الـ rate limit يعتمد على `X-Forwarded-For`، فتأكد أن البروكسي هو من يضبطه.
+## الرفع على GitHub Pages
+1. ارفع محتوى هذا المجلد (وليس المجلد نفسه) إلى جذر مستودع الموقع.
+2. Settings → Pages → Source: `main` / `(root)`.
+3. **CORS:** أضف رابط الموقع (مثل `https://USERNAME.github.io`) إلى `CORS_ALLOWED_ORIGINS` في الـ API، وإلا ستفشل كل الطلبات.
+4. عدّل `js/config.js` إن تغيّر عنوان الـ API. المفتاح فيه publishable فقط.
+
+## ملاحظات
+- التوكن يُحفظ في الذاكرة فقط (يختفي عند تحديث الصفحة)، ولا يُخزَّن في المتصفح.
+- التطبيقات المخطط لها تظهر «قريبًا» إلى أن تُسجَّل في الـ API وتُفحص صحتها.
+- لم تُجرَّب الواجهة على API حقيقي ولا في متصفح بعد.
