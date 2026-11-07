@@ -1,6 +1,7 @@
 import { $, el, mountChrome, fmtDate } from './common.js';
 import { api, signIn, session } from './api.js';
 import { icon } from './icons.js';
+import { CONFIG } from './config.js';
 
 mountChrome('account.html');
 let me = null;
@@ -8,12 +9,29 @@ const TABS = [['overview', 'نظرة عامة', 'user'], ['notifications', 'ال
 const alertBox = (cls, text) => el('div', { class: 'alert ' + cls, role: 'alert' }, text);
 const safe = async (box, fn) => { try { await fn(); } catch (e) { box.replaceChildren(alertBox('e', e.message)); if (e.code === 'unauthorized' || e.code === 'token_expired') logout(); } };
 
+async function checkService() {
+  const btn = $('#loginBtn'), msg = $('#loginMsg');
+  btn.disabled = true;
+  if (!CONFIG.API_ENABLED) {
+    msg.replaceChildren(alertBox('e', 'تسجيل الدخول متوقف لأن خدمة الحساب الخلفية لم تُنشر بعد.'));
+    return;
+  }
+  try {
+    await api('/health', { auth: false });
+    msg.replaceChildren();
+    btn.disabled = false;
+  } catch (e) {
+    msg.replaceChildren(alertBox('e', `تسجيل الدخول غير متاح لأن خدمة الحساب الخلفية لا تستجيب. ${e.message}`));
+  }
+}
+
 // ---------- الدخول ----------
 $('#loginForm').addEventListener('submit', async (ev) => {
   ev.preventDefault(); const btn = $('#loginBtn'), msg = $('#loginMsg'); msg.replaceChildren(); btn.disabled = true;
   try { await signIn($('#email').value.trim(), $('#password').value); $('#password').value = ''; await start(); }
   catch (e) { msg.replaceChildren(alertBox('e', e.message)); } finally { btn.disabled = false; }
 });
+checkService();
 function logout() { session.token = null; me = null; $('#dash').hidden = true; $('#loginBox').hidden = false; }
 
 async function start() {

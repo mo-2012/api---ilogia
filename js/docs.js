@@ -15,4 +15,11 @@ const EP = [
   ['POST', '/sso/authorize', 'u', 'إصدار كود دخول موحد (PKCE)'], ['POST', '/sso/token', 'p', 'استبدال الكود بتوكن قصير العمر'],
 ];
 $('#eps').replaceChildren(...EP.map(([m, p, a, d]) => el('div', { class: 'ep' }, el('span', { class: 'm ' + m }, m), el('div', {}, el('code', {}, p), el('div', { class: 'small muted' }, d)), el('span', { class: 'badge' + (a === 'a' ? ' gold' : '') }, AUTH[a]))));
-$('#base').textContent = CONFIG.API_BASE; $('#fullDocs').href = CONFIG.API_BASE + '/docs';
+$('#base').textContent = CONFIG.API_BASE;
+if (CONFIG.API_ENABLED) $('#fullDocs').href = CONFIG.API_BASE + '/docs';
+else {
+  $('#fullDocs').removeAttribute('href');
+  $('#fullDocs').classList.add('g');
+  $('#fullDocs').setAttribute('aria-disabled', 'true');
+  $('#fullDocs').textContent = 'التوثيق التفاعلي غير متاح حتى نشر خدمة API';
+}
